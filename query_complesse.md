@@ -34,8 +34,26 @@ Query con Group by
 Query con Join
 
 1. Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
+
+   SELECT `students`.`name` AS `student_name`, `students`.`surname` AS `student_surname`, `students`.`date_of_birth` AS `student_date_of_birth`, `students`.`fiscal_code` AS `student_fiscal_code`, `students`.`enrolment_date` AS `student_enrolment_data`, `students`.`registration_number` AS `student_registration_number`, `students`.`email` AS `student_email`
+   FROM `students`
+   JOIN `degrees` ON `degrees`.`id` = `students`.`degree_id`
+   WHERE `degrees`.`name` = 'Corso di Laurea in Economia';
+
 2. Selezionare tutti i Corsi di Laurea del Dipartimento di Neuroscienze
+
+   SELECT `degrees`.`name` AS `name_degree`, `degrees`.`level` AS `level_degree`, `degrees`.`address` AS `address_degree`, `degrees`.`email` AS `email_degree`, `degrees`.`website` AS `website_degree`
+   FROM `degrees`
+   JOIN `departments` ON `departments`.`id` = `degrees`.`department_id`
+   WHERE `departments`.`name` = 'Dipartimento di Neuroscienze';
+
 3. Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
+
+   SELECT `courses`.`name` AS `name_course`, `courses`.`description` AS `description_course`, `courses`.`period` AS `period_course`, `courses`.`year` AS `year_course`, `courses`.`cfu` AS `cfu_course`, `courses`.`website` AS `website_course`
+   FROM `courses`
+   JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id`
+   WHERE `teacher_id` = 44
+
 4. Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e nome
 5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
 6. Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
