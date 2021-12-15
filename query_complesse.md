@@ -33,29 +33,51 @@ Query con Group by
 
 Query con Join
 
-1. Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
+1.  Selezionare tutti gli studenti iscritti al Corso di Laurea in Economia
 
-   SELECT `students`.`name` AS `student_name`, `students`.`surname` AS `student_surname`, `students`.`date_of_birth` AS `student_date_of_birth`, `students`.`fiscal_code` AS `student_fiscal_code`, `students`.`enrolment_date` AS `student_enrolment_data`, `students`.`registration_number` AS `student_registration_number`, `students`.`email` AS `student_email`
-   FROM `students`
-   JOIN `degrees` ON `degrees`.`id` = `students`.`degree_id`
-   WHERE `degrees`.`name` = 'Corso di Laurea in Economia';
+    SELECT `students`.`name` AS `student_name`, `students`.`surname` AS `student_surname`, `students`.`date_of_birth` AS `student_date_of_birth`, `students`.`fiscal_code` AS `student_fiscal_code`, `students`.`enrolment_date` AS `student_enrolment_data`, `students`.`registration_number` AS `student_registration_number`, `students`.`email` AS `student_email`
+    FROM `students`
+    JOIN `degrees` ON `degrees`.`id` = `students`.`degree_id`
+    WHERE `degrees`.`name` = 'Corso di Laurea in Economia';
 
-2. Selezionare tutti i Corsi di Laurea del Dipartimento di Neuroscienze
+2.  Selezionare tutti i Corsi di Laurea del Dipartimento di Neuroscienze
 
-   SELECT `degrees`.`name` AS `name_degree`, `degrees`.`level` AS `level_degree`, `degrees`.`address` AS `address_degree`, `degrees`.`email` AS `email_degree`, `degrees`.`website` AS `website_degree`
-   FROM `degrees`
-   JOIN `departments` ON `departments`.`id` = `degrees`.`department_id`
-   WHERE `departments`.`name` = 'Dipartimento di Neuroscienze';
+    SELECT `degrees`.`name` AS `name_degree`, `degrees`.`level` AS `level_degree`, `degrees`.`address` AS `address_degree`, `degrees`.`email` AS `email_degree`, `degrees`.`website` AS `website_degree`
+    FROM `degrees`
+    JOIN `departments` ON `departments`.`id` = `degrees`.`department_id`
+    WHERE `departments`.`name` = 'Dipartimento di Neuroscienze';
 
-3. Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
+3.  Selezionare tutti i corsi in cui insegna Fulvio Amato (id=44)
 
-   SELECT `courses`.`name` AS `name_course`, `courses`.`description` AS `description_course`, `courses`.`period` AS `period_course`, `courses`.`year` AS `year_course`, `courses`.`cfu` AS `cfu_course`, `courses`.`website` AS `website_course`
-   FROM `courses`
-   JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id`
-   WHERE `teacher_id` = 44
+    SELECT `courses`.`name` AS `name_course`, `courses`.`description` AS `description_course`, `courses`.`period` AS `period_course`, `courses`.`year` AS `year_course`, `courses`.`cfu` AS `cfu_course`, `courses`.`website` AS `website_course`
+    FROM `courses`
+    JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id`
+    WHERE `teacher_id` = 44
 
-4. Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e nome
-5. Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
-6. Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
+4.  Selezionare tutti gli studenti con i dati relativi al corso di laurea a cui sono iscritti e il relativo dipartimento, in ordine alfabetico per cognome e nome
+
+    SELECT DISTINCT `students`.`name` AS `student_name`, `students`.`surname` AS `student_surname`, `degrees`.`name` AS `name_degree`, `degrees`.`level` AS `level_degree`, `degrees`.`address` AS `address_degree`, `degrees`.`email` AS `email_degree`, `degrees`.`website` AS `website_degree`, `departments`.`name` AS `name_department`, `departments`.`address` AS `address_department`, `departments`.`email` AS `email_department`, `departments`.`website` AS `website_department`
+    FROM `students`
+    JOIN `degrees` ON `degrees`.`id` = `students`.`degree_id`
+    JOIN `departments` ON `departments`.`id` = `degrees`.`department_id`
+    ORDER BY `students`.`surname` ASC
+
+5.  Selezionare tutti i corsi di laurea con i relativi corsi e insegnanti
+
+    SELECT `degrees`.`name` AS `name_degree`, `degrees`.`level` AS `level_degree`, `degrees`.`address` AS `address_degree`, `degrees`.`email` AS `email_degree`, `degrees`.`website` AS `website_degree`, `courses`.`name` AS `name_course`, `courses`.`description` AS `description_course`, `courses`.`period` AS `period_course`, `courses`.`year` AS `year_course`, `courses`.`cfu` AS `cfu_course`, `courses`.`website` AS `website_course`, `teachers`.`name` AS `teacher_name`, `teachers`.`surname` AS `teacher_surname`, `teachers`.`phone` AS `teacher_phone`, `teachers`.`email` AS `teacher_email`, `teachers`.`office_address` AS `teacher_office_address`, `teachers`.`office_number` AS `teacher_office_number`
+    FROM `courses`
+    JOIN `degrees` ON `degrees`.`id` = `courses`.`degree_id`
+    JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id`
+    JOIN `teachers` ON `teachers`.`id` = `course_teacher`.`teacher_id`  
+    ORDER BY `name_degree`
+
+6.  Selezionare tutti i docenti che insegnano nel Dipartimento di Matematica (54)
+
+    SELECT DISTINCT `teachers`.`name` AS `teacher_name`, `teachers`.`surname` AS `teacher_surname`, `teachers`.`phone` AS `teacher_phone`, `teachers`.`email` AS `teacher_email`, `teachers`.`office_address` AS `teacher_office_address`, `teachers`.`office_number` AS `teacher_office_number`, `courses`.`name` AS `name_course`, `courses`.`description` AS `description_course`, `courses`.`period` AS `period_course`, `courses`.`year` AS `year_course`, `courses`.`cfu` AS `cfu_course`, `courses`.`website` AS `website_course`, `degrees`.`name` AS `name_degree`, `degrees`.`level` AS `level_degree`, `degrees`.`address` AS `address_degree`, `degrees`.`email` AS `email_degree`, `degrees`.`website` AS `website_degree`
+    FROM `courses`
+    JOIN `degrees` ON `degrees`.`id` = `courses`.`degree_id`
+    JOIN `course_teacher` ON `courses`.`id` = `course_teacher`.`course_id`
+    JOIN `teachers` ON `teachers`.`id` = `course_teacher`.`teacher_id`
+    WHERE `department_id` = 5
 
 BONUS: Selezionare per ogni studente quanti tentativi d’esame ha sostenuto per superare ciascuno dei suoi esami
